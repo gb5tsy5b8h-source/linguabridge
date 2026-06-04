@@ -2,7 +2,7 @@
 
 Everyone speaks. Everyone understands.
 
-Linguabridge is a clean step-by-step multilingual chat demo for a university cloud AI project. Each participant writes or speaks in their own language, and every receiver sees the conversation translated into their selected language.
+Linguabridge is an AI-powered multilingual collaboration platform that enables users speaking different languages to communicate seamlessly using Azure AI Translator, conversation history, speech support, and automated meeting summarization.
 
 ## Run Commands
 

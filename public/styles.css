@@ -117,11 +117,24 @@ select:hover {
   align-content: center;
   justify-items: center;
   text-align: center;
-  padding: 54px 28px;
+  padding: 64px 34px;
   border: 1px solid var(--border);
   border-radius: 32px;
   background: var(--card);
   box-shadow: var(--shadow);
+}
+
+.azure-badge {
+  display: inline-flex;
+  align-items: center;
+  margin: 4px 0 18px;
+  padding: 8px 12px;
+  border: 1px solid rgba(37, 99, 235, 0.18);
+  border-radius: 999px;
+  background: rgba(37, 99, 235, 0.06);
+  color: var(--blue);
+  font-size: 0.82rem;
+  font-weight: 900;
 }
 
 .eyebrow,
@@ -158,22 +171,22 @@ h1 {
 }
 
 .home-copy {
-  max-width: 620px;
-  margin-bottom: 30px;
+  max-width: 760px;
+  margin-bottom: 32px;
   color: var(--muted);
-  font-size: 1.08rem;
+  font-size: 1.02rem;
   line-height: 1.7;
 }
 
 .chat-preview {
   width: min(760px, 100%);
   display: grid;
-  gap: 10px;
-  margin: 8px 0 28px;
-  padding: 18px;
+  gap: 12px;
+  margin: 10px 0 34px;
+  padding: 20px;
   border: 1px solid var(--border);
   border-radius: 24px;
-  background: var(--soft);
+  background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
 }
 
 .preview-bubble {
@@ -220,7 +233,66 @@ h1 {
 }
 
 .home-actions {
-  margin-bottom: 22px;
+  margin-bottom: 26px;
+}
+
+.ai-features {
+  width: min(900px, 100%);
+  margin-top: 6px;
+  padding-top: 30px;
+  border-top: 1px solid var(--border);
+}
+
+.features-heading {
+  margin-bottom: 16px;
+}
+
+.features-heading span {
+  color: var(--blue);
+  font-size: 0.76rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.features-heading h2 {
+  margin: 8px 0 0;
+  color: var(--navy);
+  font-size: clamp(1.8rem, 3vw, 2.5rem);
+  line-height: 1;
+}
+
+.feature-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.feature-card {
+  min-height: 116px;
+  display: grid;
+  align-content: space-between;
+  gap: 18px;
+  padding: 18px;
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  background: #ffffff;
+  text-align: left;
+  box-shadow: 0 14px 36px rgba(15, 23, 42, 0.05);
+}
+
+.feature-card span {
+  color: var(--blue);
+  font-size: 0.78rem;
+  font-weight: 900;
+}
+
+.feature-card p {
+  margin: 0;
+  color: var(--navy);
+  font-size: 1rem;
+  font-weight: 900;
+  line-height: 1.35;
 }
 
 button,
@@ -550,7 +622,8 @@ button:disabled {
 
   .form-grid,
   .summary-layout,
-  .export-grid {
+  .export-grid,
+  .feature-grid {
     grid-template-columns: 1fr;
   }
 
