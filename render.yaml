@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: linguabridge
+    env: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
+    envVars:
+      - key: AZURE_TRANSLATOR_KEY
+        sync: false
+      - key: AZURE_TRANSLATOR_ENDPOINT
+        sync: false
+      - key: AZURE_TRANSLATOR_REGION
+        sync: false

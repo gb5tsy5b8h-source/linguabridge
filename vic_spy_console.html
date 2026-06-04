@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>VIC Cipher Spy Console</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        --bg: #0b1020;
+        --panel: #111827;
+        --panel-2: #162033;
+        --line: #29364f;
+        --text: #eef4ff;
+        --muted: #9ca8bd;
+        --blue: #5aa2ff;
+        --cyan: #35d0df;
+        --amber: #f8c35b;
+        --green: #5ee28a;
+        --red: #ff6b7a;
+        --shadow: rgba(0, 0, 0, 0.35);
+      }
+
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background:
+          radial-gradient(circle at 20% 10%, rgba(53, 208, 223, 0.16), transparent 28%),
+          radial-gradient(circle at 80% 0%, rgba(90, 162, 255, 0.2), transparent 30%),
+          linear-gradient(135deg, #080c18, var(--bg) 52%, #10172a);
+        color: var(--text);
+        font-family:
+          Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+          sans-serif;
+      }
+
+      .app {
+        width: min(1180px, calc(100vw - 40px));
+        margin: 0 auto;
+        padding: 30px 0 34px;
+      }
+
+      header {
+        display: flex;
+        align-items: flex-end;
+        justify-content: space-between;
+        gap: 24px;
+        padding-bottom: 18px;
+        border-bottom: 1px solid rgba(156, 168, 189, 0.22);
+      }
+
+      .eyebrow {
+        color: var(--cyan);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 0.14em;
+        text-transform: uppercase;
+      }
+
+      h1 {
+        margin: 8px 0 0;
+        max-width: 760px;
+        font-size: clamp(34px, 5vw, 56px);
+        line-height: 0.98;
+        letter-spacing: 0;
+      }
+
+      .subtitle {
+        margin: 12px 0 0;
+        max-width: 710px;
+        color: var(--muted);
+        font-size: 16px;
+        line-height: 1.5;
+      }
+
+      .status {
+        min-width: 210px;
+        padding: 14px 16px;
+        border: 1px solid rgba(94, 226, 138, 0.42);
+        background: rgba(94, 226, 138, 0.08);
+        border-radius: 8px;
+        box-shadow: 0 18px 40px var(--shadow);
+      }
+
+      .status strong {
+        display: block;
+        color: var(--green);
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 0.12em;
+      }
+
+      .status span {
+        display: block;
+        margin-top: 7px;
+        color: var(--text);
+        font-size: 14px;
+      }
+
+      main {
+        display: grid;
+        grid-template-columns: 0.85fr 1.15fr;
+        gap: 18px;
+        margin-top: 22px;
+      }
+
+      section,
+      .panel {
+        border: 1px solid rgba(156, 168, 189, 0.22);
+        background: rgba(17, 24, 39, 0.88);
+        border-radius: 8px;
+        box-shadow: 0 18px 50px var(--shadow);
+      }
+
+      section {
+        padding: 18px;
+      }
+
+      h2 {
+        margin: 0 0 14px;
+        font-size: 17px;
+        letter-spacing: 0;
+      }
+
+      label {
+        display: block;
+        margin: 14px 0 7px;
+        color: var(--muted);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        text-transform: uppercase;
+      }
+
+      input,
+      textarea {
+        width: 100%;
+        border: 1px solid var(--line);
+        background: #0c1324;
+        color: var(--text);
+        border-radius: 7px;
+        padding: 12px;
+        font: inherit;
+        outline: none;
+      }
+
+      textarea {
+        min-height: 96px;
+        resize: vertical;
+      }
+
+      input:focus,
+      textarea:focus {
+        border-color: var(--blue);
+        box-shadow: 0 0 0 3px rgba(90, 162, 255, 0.16);
+      }
+
+      .buttons {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 10px;
+        margin-top: 14px;
+      }
+
+      button {
+        border: 0;
+        border-radius: 7px;
+        padding: 12px 14px;
+        color: #07111f;
+        font-weight: 800;
+        cursor: pointer;
+        transition:
+          transform 120ms ease,
+          filter 120ms ease;
+      }
+
+      button:hover {
+        filter: brightness(1.06);
+        transform: translateY(-1px);
+      }
+
+      .encrypt {
+        background: var(--cyan);
+      }
+
+      .decrypt {
+        background: var(--amber);
+      }
+
+      .danger {
+        background: transparent;
+        color: var(--red);
+        border: 1px solid rgba(255, 107, 122, 0.48);
+      }
+
+      .grid {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 18px;
+      }
+
+      .output {
+        grid-column: 1 / -1;
+      }
+
+      .readout {
+        min-height: 74px;
+        border: 1px solid var(--line);
+        background: #090f1e;
+        border-radius: 7px;
+        padding: 13px;
+        color: var(--green);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          monospace;
+        font-size: 16px;
+        line-height: 1.45;
+        overflow-wrap: anywhere;
+      }
+
+      .muted {
+        color: var(--muted);
+      }
+
+      .steps {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+        gap: 10px;
+      }
+
+      .step {
+        min-height: 112px;
+        border: 1px solid var(--line);
+        background: var(--panel-2);
+        border-radius: 7px;
+        padding: 12px;
+      }
+
+      .step b {
+        display: block;
+        margin-bottom: 8px;
+        color: var(--cyan);
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+
+      .step span {
+        color: var(--text);
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          monospace;
+        font-size: 13px;
+        overflow-wrap: anywhere;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        overflow: hidden;
+        border-radius: 7px;
+        font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono",
+          monospace;
+        font-size: 13px;
+      }
+
+      th,
+      td {
+        border: 1px solid var(--line);
+        padding: 8px 7px;
+        text-align: center;
+      }
+
+      th {
+        background: #0c1324;
+        color: var(--blue);
+      }
+
+      td {
+        background: rgba(22, 32, 51, 0.82);
+      }
+
+      .code {
+        color: var(--amber);
+      }
+
+      .note {
+        margin-top: 12px;
+        color: var(--muted);
+        font-size: 12.5px;
+        line-height: 1.45;
+      }
+
+      @media (max-width: 920px) {
+        header,
+        main,
+        .grid,
+        .steps {
+          grid-template-columns: 1fr;
+        }
+
+        header {
+          align-items: stretch;
+        }
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app">
+      <header>
+        <div>
+          <div class="eyebrow">Week 12 Cryptography Demo</div>
+          <h1>VIC Cipher Spy Console</h1>
+          <p class="subtitle">
+            A polished classroom demo using VIC-inspired keyed substitution and columnar
+            transposition. Built to show the professor: W5H1, Python/source-code logic, demo,
+            and cracking behavior.
+          </p>
+        </div>
+        <div class="status">
+          <strong>Demo Status</strong>
+          <span id="status">Ready for encryption</span>
+        </div>
+      </header>
+
+      <main>
+        <section>
+          <h2>Operator Input</h2>
+          <label for="message">Plain Message</label>
+          <textarea id="message">MEET AT NOON</textarea>
+
+          <label for="key">Secret Key</label>
+          <input id="key" value="SECRET 1970" />
+
+          <label for="cipherInput">Ciphertext For Decryption</label>
+          <textarea id="cipherInput" placeholder="Ciphertext appears here after encryption"></textarea>
+
+          <div class="buttons">
+            <button class="encrypt" id="encryptBtn">Encrypt Message</button>
+            <button class="decrypt" id="decryptBtn">Decrypt Ciphertext</button>
+          </div>
+          <div class="buttons">
+            <button class="danger" id="wrongKeyBtn">Test Wrong Key</button>
+            <button class="danger" id="resetBtn">Reset Demo</button>
+          </div>
+
+          <p class="note">
+            Presentation line: this is VIC-inspired, not the exact historical VIC cipher. It
+            demonstrates the serious ideas: keyed checkerboard substitution and transposition.
+          </p>
+        </section>
+
+        <div class="grid">
+          <section class="output">
+            <h2>Mission Output</h2>
+            <div class="readout" id="output">Waiting for operator command...</div>
+          </section>
+
+          <section>
+            <h2>Algorithm Steps</h2>
+            <div class="steps">
+              <div class="step">
+                <b>1. Normalize</b>
+                <span id="normalized">-</span>
+              </div>
+              <div class="step">
+                <b>2. Keyed Alphabet</b>
+                <span id="alphabet">-</span>
+              </div>
+              <div class="step">
+                <b>3. Substitution</b>
+                <span id="substitution">-</span>
+              </div>
+              <div class="step">
+                <b>4. Transposition</b>
+                <span id="transposition">-</span>
+              </div>
+            </div>
+          </section>
+
+          <section>
+            <h2>Keyed Checkerboard</h2>
+            <table id="board"></table>
+            <p class="note">
+              Letters map to one-digit or two-digit number codes. The secret key changes the
+              mapping, which changes the final ciphertext.
+            </p>
+          </section>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      const alphabet = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+      const rowLabels = ["2", "6"];
+      const topDigits = ["0", "1", "3", "4", "5", "7", "8", "9"];
+      const allDigits = ["0", "1", "2", "3", "4", "5", "6", "7", "8", "9"];
+
+      const $ = (id) => document.getElementById(id);
+
+      function normalize(text) {
+        const result = text.toUpperCase().replace(/[^A-Z]/g, "");
+        if (!result) throw new Error("Message must contain at least one letter.");
+        return result;
+      }
+
+      function keyedAlphabet(key) {
+        const seen = new Set();
+        const letters = [];
+        for (const ch of key.toUpperCase()) {
+          if (alphabet.includes(ch) && !seen.has(ch)) {
+            seen.add(ch);
+            letters.push(ch);
+          }
+        }
+        for (const ch of alphabet) {
+          if (!seen.has(ch)) letters.push(ch);
+        }
+        return letters.join("");
+      }
+
+      function buildBoard(key) {
+        const keyed = keyedAlphabet(key);
+        const board = {};
+        keyed.slice(0, 8).split("").forEach((letter, index) => {
+          board[letter] = topDigits[index];
+        });
+
+        const slots = [
+          ...allDigits.map((digit) => rowLabels[0] + digit),
+          ...allDigits.slice(0, 8).map((digit) => rowLabels[1] + digit),
+        ];
+
+        keyed
+          .slice(8)
+          .split("")
+          .forEach((letter, index) => {
+            board[letter] = slots[index];
+          });
+        return board;
+      }
+
+      function orderForKey(key) {
+        const clean = normalize(key);
+        return [...clean]
+          .map((ch, index) => ({ ch, index }))
+          .sort((a, b) => a.ch.localeCompare(b.ch) || a.index - b.index)
+          .map((item) => item.index);
+      }
+
+      function groupDigits(digits, size = 5) {
+        return digits.match(new RegExp(`.{1,${size}}`, "g")).join(" ");
+      }
+
+      function columnarEncrypt(digits, key) {
+        const order = orderForKey(key);
+        const width = order.length;
+        const height = Math.ceil(digits.length / width);
+        const padded = digits.padEnd(width * height, "0");
+        const rows = [];
+        for (let i = 0; i < padded.length; i += width) rows.push(padded.slice(i, i + width));
+        let out = "";
+        for (const col of order) {
+          for (const row of rows) out += row[col];
+        }
+        return { digits: out, originalLength: digits.length };
+      }
+
+      function columnarDecrypt(transposed, key, originalLength) {
+        const order = orderForKey(key);
+        const width = order.length;
+        const height = Math.ceil(transposed.length / width);
+        const columns = {};
+        let cursor = 0;
+        for (const col of order) {
+          columns[col] = transposed.slice(cursor, cursor + height);
+          cursor += height;
+        }
+        let out = "";
+        for (let row = 0; row < height; row += 1) {
+          for (let col = 0; col < width; col += 1) {
+            out += columns[col][row] || "";
+          }
+        }
+        return out.slice(0, originalLength);
+      }
+
+      function substitute(text, board) {
+        return [...text].map((ch) => board[ch]).join("");
+      }
+
+      function unsubstitute(digits, board) {
+        const reverse = Object.fromEntries(Object.entries(board).map(([letter, code]) => [code, letter]));
+        let out = "";
+        let cursor = 0;
+        while (cursor < digits.length) {
+          let code = digits[cursor];
+          if (rowLabels.includes(code)) {
+            code = digits.slice(cursor, cursor + 2);
+            cursor += 2;
+          } else {
+            cursor += 1;
+          }
+          if (!reverse[code]) throw new Error("Wrong key or damaged ciphertext.");
+          out += reverse[code];
+        }
+        return out;
+      }
+
+      function encrypt() {
+        const key = $("key").value;
+        const normalized = normalize($("message").value);
+        const board = buildBoard(key);
+        const sub = substitute(normalized, board);
+        const transposed = columnarEncrypt(sub, key);
+        const finalDigits = String(transposed.originalLength).padStart(4, "0") + transposed.digits;
+        const grouped = groupDigits(finalDigits);
+
+        $("cipherInput").value = grouped;
+        $("output").textContent = grouped;
+        $("normalized").textContent = normalized;
+        $("alphabet").textContent = keyedAlphabet(key);
+        $("substitution").textContent = groupDigits(sub);
+        $("transposition").textContent = grouped;
+        $("status").textContent = "Encrypted successfully";
+        renderBoard(board);
+      }
+
+      function decrypt(keyOverride) {
+        const key = keyOverride || $("key").value;
+        const digits = $("cipherInput").value.replace(/\D/g, "");
+        if (digits.length < 5) throw new Error("Ciphertext is too short.");
+        const originalLength = Number(digits.slice(0, 4));
+        const transposed = digits.slice(4);
+        const board = buildBoard(key);
+        const substituted = columnarDecrypt(transposed, key, originalLength);
+        const plain = unsubstitute(substituted, board);
+
+        $("output").textContent = plain;
+        $("status").textContent = keyOverride ? "Wrong-key test completed" : "Decrypted successfully";
+        renderBoard(board);
+      }
+
+      function renderBoard(board) {
+        const rows = [];
+        for (let i = 0; i < alphabet.length; i += 4) {
+          rows.push(alphabet.slice(i, i + 4).split(""));
+        }
+        $("board").innerHTML = rows
+          .map(
+            (row) =>
+              `<tr>${row
+                .map((letter) => `<th>${letter}</th><td class="code">${board[letter]}</td>`)
+                .join("")}</tr>`
+          )
+          .join("");
+      }
+
+      function safeRun(fn) {
+        try {
+          fn();
+        } catch (error) {
+          $("output").textContent = error.message;
+          $("status").textContent = "Check input";
+        }
+      }
+
+      $("encryptBtn").addEventListener("click", () => safeRun(encrypt));
+      $("decryptBtn").addEventListener("click", () => safeRun(() => decrypt()));
+      $("wrongKeyBtn").addEventListener("click", () => safeRun(() => decrypt("PUBLIC 1970")));
+      $("resetBtn").addEventListener("click", () => {
+        $("message").value = "MEET AT NOON";
+        $("key").value = "SECRET 1970";
+        $("cipherInput").value = "";
+        $("output").textContent = "Waiting for operator command...";
+        $("normalized").textContent = "-";
+        $("alphabet").textContent = "-";
+        $("substitution").textContent = "-";
+        $("transposition").textContent = "-";
+        $("status").textContent = "Ready for encryption";
+        renderBoard(buildBoard("SECRET 1970"));
+      });
+
+      renderBoard(buildBoard("SECRET 1970"));
+    </script>
+  </body>
+</html>

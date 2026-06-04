@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Linguabridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Noto+Sans+Arabic:wght@400;600;700&family=Noto+Sans+Bengali:wght@400;600;700&family=Noto+Sans+Devanagari:wght@400;600;700&family=Noto+Sans+KR:wght@400;600;700&display=swap" rel="stylesheet" />
+    <link rel="stylesheet" href="/styles.css" />
+  </head>
+  <body>
+    <main class="app-shell">
+      <header class="topbar">
+        <a class="brand" href="/" data-tab-link="home" aria-label="Linguabridge home">
+          <span class="brand-mark">L</span>
+          <span>Linguabridge</span>
+        </a>
+        <nav class="tabs" aria-label="Demo navigation">
+          <button class="tab-button active" type="button" data-tab="home">Home</button>
+          <button class="tab-button" type="button" data-tab="translate">Translate</button>
+          <button class="tab-button" type="button" data-tab="conversation">Conversation</button>
+          <button class="tab-button" type="button" data-tab="summary">Summary</button>
+          <button class="tab-button" type="button" data-tab="export">Export</button>
+        </nav>
+      </header>
+
+      <section id="home" class="view active">
+        <div class="home-card">
+          <p class="eyebrow">Multilingual group chat</p>
+          <h1>Linguabridge</h1>
+          <p class="tagline">Everyone speaks. Everyone understands.</p>
+          <p class="home-copy">Real-time multilingual conversations powered by AI translation.</p>
+          <div class="home-actions">
+            <button id="startDemoButton" class="primary-button" type="button">Start Demo</button>
+            <button class="secondary-button" type="button" data-tab="conversation">How it works</button>
+          </div>
+          <div class="chat-preview" aria-label="Multilingual group chat preview">
+            <article class="preview-bubble sender">
+              <span>Rayhan sends in Bengali</span>
+              <p>আজকের আবহাওয়া কেমন?</p>
+            </article>
+            <article class="preview-bubble">
+              <span>Jisu reads in Korean</span>
+              <p>오늘 날씨가 어때요?</p>
+            </article>
+            <article class="preview-bubble">
+              <span>Alex reads in English</span>
+              <p>How is the weather today?</p>
+            </article>
+            <article class="preview-bubble">
+              <span>Yuki reads in Japanese</span>
+              <p>今日の天気はどうですか？</p>
+            </article>
+            <article class="preview-bubble">
+              <span>Maria reads in Spanish</span>
+              <p>¿Cómo está el clima hoy?</p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <section id="translate" class="view">
+        <div class="section-header">
+          <h2>Send a multilingual message</h2>
+          <p>Choose a sender, speak or type, then send it to everyone.</p>
+        </div>
+
+        <div class="flow-card">
+          <div class="form-grid">
+            <label>
+              <span>User</span>
+              <select id="senderSelect"></select>
+            </label>
+            <label>
+              <span>Sender language</span>
+              <select id="sourceLanguageSelect"></select>
+            </label>
+            <label>
+              <span>Target receiver</span>
+              <select id="receiverSelect"></select>
+            </label>
+          </div>
+
+          <label class="message-box">
+            <span>Your Message</span>
+            <textarea id="messageInput" rows="5" placeholder="Type or speak a message..."></textarea>
+          </label>
+
+          <div class="action-row">
+            <button id="micButton" class="secondary-button" type="button">Speak</button>
+            <button id="translateButton" class="primary-button" type="button">Send / Translate</button>
+            <button id="clearButton" class="secondary-button" type="button">Clear</button>
+          </div>
+
+          <div id="typingIndicator" class="status-line" hidden>Translating...</div>
+          <div id="successToast" class="success-toast" hidden>Message translated for every participant.</div>
+
+          <article id="translationOutputCard" class="output-card" hidden>
+            <div class="card-topline">
+              <span>Translation</span>
+              <button id="listenOutputButton" class="small-button" type="button">Listen</button>
+            </div>
+            <p id="translationOutput">Translation will appear here.</p>
+          </article>
+        </div>
+      </section>
+
+      <section id="conversation" class="view">
+        <div class="section-header">
+          <h2>Conversation</h2>
+          <p id="receiverBadge">Choose a receiver to preview translated chat.</p>
+        </div>
+
+        <div class="conversation-shell">
+          <div class="conversation-toolbar">
+            <label>
+              <span>View as</span>
+              <select id="conversationReceiverSelect"></select>
+            </label>
+            <button class="secondary-button" type="button" data-tab="translate">New message</button>
+          </div>
+          <div id="messagesList" class="messages-list" aria-live="polite"></div>
+        </div>
+      </section>
+
+      <section id="summary" class="view">
+        <div class="section-header">
+          <h2>Meeting notes</h2>
+          <p>Generate clean notes from the conversation.</p>
+        </div>
+
+        <div class="summary-layout">
+          <div class="flow-card compact">
+            <button id="summaryButton" class="primary-button" type="button">Generate Summary</button>
+            <button id="downloadSummaryButton" class="secondary-button" type="button">Download Summary</button>
+            <button id="cloudSaveButton" class="secondary-button" type="button">Cloud Save Demo</button>
+            <p id="saveStatus" class="save-status">Ready to save.</p>
+          </div>
+          <div id="summaryContent" class="summary-content">
+            <p>Summary will appear here.</p>
+          </div>
+        </div>
+      </section>
+
+      <section id="export" class="view">
+        <div class="section-header">
+          <span>Export</span>
+          <h2>Share the demo</h2>
+          <p>Use the public Render link for final presentation day.</p>
+        </div>
+
+        <div class="export-grid">
+          <article class="info-card">
+            <span>Online Demo Link</span>
+            <p>Deploy on Render and paste the public URL in README.</p>
+          </article>
+          <article class="info-card">
+            <span>Deployment status</span>
+            <p>Ready for Render deployment.</p>
+          </article>
+          <article class="info-card">
+            <span>Download</span>
+            <a class="primary-link" href="/api/history/download" download>Download JSON</a>
+          </article>
+          <article class="info-card">
+            <span>Download Summary</span>
+            <button id="exportSummaryButton" class="secondary-button" type="button">Download Summary</button>
+          </article>
+        </div>
+      </section>
+    </main>
+
+    <script src="/app.js"></script>
+  </body>
+</html>
